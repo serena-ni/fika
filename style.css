@@ -1,268 +1,133 @@
-:root {
-  --bg: #FFF6F9;
-  --accent: #F5D7C8;
-  --accent2: #F1C6B6;
-  --muted: #C9D9E8;
-  --card: #ffffffcc;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
-}
-
-/* layout for footer */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.page {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content {
-  flex: 1;
-}
-
-/* base body styles */
 body {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #FFF6F9, #FFF1FB);
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'Inter', sans-serif;
+  background: #f8f4ff;
 }
 
-/* card */
-.card {
-  background: var(--card);
-  border-radius: 18px;
-  box-shadow: 0 8px 30px rgba(100,80,120,0.08);
-  padding: 24px;
-  width: min(500px, 90vw);
+/* centering */
+.main-content {
+  flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  justify-content: center;
+  align-items: center; /* vertical centering restored */
+  padding: 40px 0;
+}
+
+/* timer box or container */
+.container {
+  background: white;
+  padding: 32px;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  transition: transform .2s ease;
+}
+
+.container:hover {
+  transform: translateY(-3px);
+}
+
+/* add / subtract time */
+.adjust-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.adjust-buttons button {
+  background: #ffe9f3;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: transform .15s ease, background .2s ease;
+}
+
+.adjust-buttons button:hover {
+  background: #ffd3e9;
+  transform: scale(1.05);
+}
+
+/* timer text */
+#timer {
+  font-size: 3rem;
+  margin: 20px 0;
+  color: #403d52;
+}
+
+/* start button */
+button.start {
+  background: #d9caff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform .2s ease, background .2s ease;
+}
+
+button.start:hover {
+  background: #c8b2ff;
+  transform: scale(1.05);
+}
+
+/* doodle / journal buttons */
+#openDoodle, #openJournal {
+  margin-top: 20px;
+  background: #dff8ff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+
+#openDoodle:hover, #openJournal:hover {
+  background: #c3f0ff;
+  transform: scale(1.05);
+}
+
+/* info button */
+.help-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: #ffe0f4;
+  border-radius: 50%;
+  padding: 12px 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  transition: transform .2s;
+}
+
+.help-btn:hover {
+  transform: translateY(-3px);
 }
 
 /* footer */
 .footer {
+  width: 100%;
   text-align: center;
   font-size: 0.8rem;
   color: #888;
   padding: 16px 0;
-  margin-top: 24px;
+  margin-top: auto;
   opacity: 0.7;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity .3s ease;
 }
 
 .footer:hover {
-  transform: translateY(-1px);
   opacity: 1;
-}
-
-/* text */
-h1 {
-  font-size: 24px;
-  color: #6b3b6a;
-}
-
-/* pet */
-.pet {
-  font-size: 80px;
-  cursor: pointer;
-  transition: transform 0.2s, filter 0.2s;
-}
-.pet:hover {
-  transform: scale(1.1) rotate(-5deg);
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
-}
-
-/* timer */
-.timer-container {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.timer-container .timer {
-  font-size: 32px;
-  font-weight: bold;
-  color: #6b3b6a;
-  min-width: 80px;
-  text-align: center;
-}
-
-.timer.animate {
-  animation: timerPop 0.3s ease-out;
-}
-@keyframes timerPop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-/* buttons */
-.controls {
-  display: flex;
-  gap: 12px;
-}
-
-.button {
-  padding: 10px 16px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
-}
-
-.button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
-
-.primary {
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  color: #4b2b50;
-}
-
-.muted {
-  background: #fff;
-  border: 1px solid #eee;
-  color: #6b3b6a;
-}
-
-/* journal button special hover */
-#openJournalBtn {
-  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
-}
-
-#openJournalBtn:hover {
-  transform: scale(1.05) rotate(-2deg);
-  background: var(--accent2);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
-
-.score {
-  font-size: 16px;
-  color: #6b3b6a;
-}
-
-.mini-hint {
-  font-size: 12px;
-  color: var(--muted);
-  text-align: center;
-}
-
-/* info popup button */
-.info-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--accent2);
-  color: #6b3b6a;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.2s, background 0.2s;
-}
-
-.info-btn:hover {
-  transform: scale(1.1);
-  background: var(--accent);
-}
-
-/* info popup */
-.info-popup {
-  display: none;
-  position: fixed;
-  bottom: 70px;
-  right: 20px;
-  width: 260px;
-  background: var(--card);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 8px 24px rgba(100,80,120,0.15);
-  font-size: 14px;
-  color: #6b3b6a;
-  line-height: 1.4;
-  z-index: 100;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.info-popup.show {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* journal popup */
-.journal-popup {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-  width: 320px;
-  background: var(--card);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 12px 32px rgba(100,80,120,0.2);
-  color: #6b3b6a;
-  text-align: center;
-  z-index: 200;
-  transition: all 0.3s ease;
-}
-
-.journal-popup.show {
-  display: block;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.journal-popup h2 {
-  font-size: 20px;
-  margin-bottom: 8px;
-}
-
-.journal-popup p {
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-#journalInput {
-  width: 100%;
-  min-height: 60px;
-  border-radius: 12px;
-  border: 1px solid var(--muted);
-  padding: 8px;
-  resize: none;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.journal-buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-/* doodle canvas */
-#doodleCanvas {
-  border: 1px solid var(--muted);
-  border-radius: 12px;
-  width: 100%;
-  height: 120px;
-  touch-action: none;
-  cursor: crosshair;
-  margin-top: 8px;
 }
