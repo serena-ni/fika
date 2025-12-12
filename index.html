@@ -7,49 +7,55 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="card">
-    <h1>fika</h1>
+  <div class="page">
 
-    <div class="pet" id="pet" title="Click me!">🐱</div>
+    <div class="main-content">
+      <div class="card">
+        <h1>fika</h1>
 
-    <div class="timer-container">
-      <button class="button muted" id="subBtn">-30s</button>
-      <div class="timer" id="timer">02:00</div>
-      <button class="button muted" id="addBtn">+30s</button>
+        <div class="pet" id="pet" title="Click me!">🐱</div>
+
+        <div class="timer-container">
+          <button class="button muted" id="subBtn">-30s</button>
+          <div class="timer" id="timer">02:00</div>
+          <button class="button muted" id="addBtn">+30s</button>
+        </div>
+
+        <div class="controls">
+          <button class="button primary" id="startBtn">start</button>
+          <button class="button muted" id="resetBtn">reset</button>
+        </div>
+
+        <div class="score">streak: <span id="streak">0</span></div>
+        <div class="mini-hint">click the pet during your break for a tiny cheer! 🎉</div>
+        <button id="openJournalBtn" class="button muted" title="Click to jot a thought or doodle!">✏️ journal / doodle</button>
+      </div>
+
+      <!-- info button & popup -->
+      <button id="infoBtn" class="info-btn">❔</button>
+      <div id="infoPopup" class="info-popup">
+        <p>hi kat! 🎀</p><br>
+        <p>fika is a tiny focus break tool: do a 2-minute micro-session with a cute pet to relax, stay motivated, and build tiny streaks! <br><br>click the pet for encouragement and enjoy your cozy break. ✨</p><br>
+        <button id="closePopup" class="button muted">close</button>
+      </div>
+
+      <!-- micro-journal / doodle pad -->
+      <div id="journalPopup" class="journal-popup">
+        <h2>quick journal ✨</h2>
+        <p>write or doodle one thing about your break!</p>
+        <textarea id="journalInput" placeholder="your thoughts... 🐾"></textarea>
+        <div class="journal-buttons">
+          <button id="journalSave" class="button primary">save</button>
+          <button id="journalClose" class="button muted">skip</button>
+        </div>
+        <canvas id="doodleCanvas"></canvas>
+      </div>
     </div>
 
-    <div class="controls">
-      <button class="button primary" id="startBtn">start</button>
-      <button class="button muted" id="resetBtn">reset</button>
-    </div>
+    <!-- footer -->
+    <footer class="footer">made with ❤️</footer>
 
-    <div class="score">streak: <span id="streak">0</span></div>
-    <div class="mini-hint">click the pet during your break for a tiny cheer! 🎉</div>
-    <button id="openJournalBtn" class="button muted" title="Click to jot a thought or doodle!">✏️ journal / doodle</button>
   </div>
-
-  <!-- info button & popup -->
-  <button id="infoBtn" class="info-btn">❔</button>
-  <div id="infoPopup" class="info-popup">
-    <p>hi kat! 🎀</p><br>
-    <p>fika is a tiny focus break tool: do a 2-minute micro-session with a cute pet to relax, stay motivated, and build tiny streaks! <br><br>click the pet for encouragement and enjoy your cozy break. ✨</p><br>
-    <button id="closePopup" class="button muted">close</button>
-  </div>
-
-  <!-- micro-journal / doodle pad -->
-  <div id="journalPopup" class="journal-popup">
-    <h2>quick journal ✨</h2>
-    <p>write or doodle one thing about your break!</p>
-    <textarea id="journalInput" placeholder="your thoughts... 🐾"></textarea>
-    <div class="journal-buttons">
-      <button id="journalSave" class="button primary">save</button>
-      <button id="journalClose" class="button muted">skip</button>
-    </div>
-    <canvas id="doodleCanvas"></canvas>
-  </div>
-
-  <!-- footer -->
-  <footer class="footer"> made with ❤️</footer>
 
   <script src="script.js"></script>
 </body>
