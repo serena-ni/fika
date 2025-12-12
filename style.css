@@ -29,6 +29,21 @@ body {
   gap: 16px;
 }
 
+.footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  padding: 16px 0;
+  margin-top: 24px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.footer:hover {
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
 h1 { font-size: 24px; color: #6b3b6a; }
 
 .pet {
