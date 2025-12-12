@@ -8,3 +8,5 @@ It’s not super fancy (I’m still getting used to VS Code and actually buildin
 <br><br>
 Hope it adds a tiny bit of calm to your day.<br>
 Made with love. 💗
+
+![Fika screenshot](./page.png)
