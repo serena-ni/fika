@@ -1,106 +1,166 @@
-const pet = document.getElementById('pet');
-const startBtn = document.getElementById('startBtn');
-const resetBtn = document.getElementById('resetBtn');
-const timerEl = document.getElementById('timer');
-const streakEl = document.getElementById('streak');
+/* elements */
+const pet = document.getElementById("pet");
+const timerEl = document.getElementById("timer");
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const addBtn = document.getElementById("addBtn");
+const subBtn = document.getElementById("subBtn");
+const streakEl = document.getElementById("streak");
 
-const addBtn = document.getElementById('addBtn');
-const subBtn = document.getElementById('subBtn');
+const infoBtn = document.getElementById("infoBtn");
+const infoPopup = document.getElementById("infoPopup");
+const closePopup = document.getElementById("closePopup");
 
-const infoBtn = document.getElementById('infoBtn');
-const infoPopup = document.getElementById('infoPopup');
-const closePopup = document.getElementById('closePopup');
+const journalPopup = document.getElementById("journalPopup");
+const journalInput = document.getElementById("journalInput");
+const journalSave = document.getElementById("journalSave");
+const journalClose = document.getElementById("journalClose");
 
-const journalPopup = document.getElementById('journalPopup');
-const journalInput = document.getElementById('journalInput');
-const journalSave = document.getElementById('journalSave');
-const journalClose = document.getElementById('journalClose');
-const doodleCanvas = document.getElementById('doodleCanvas');
+const doodlePopup = document.getElementById("doodlePopup");
+const doodleCanvas = document.getElementById("doodleCanvas");
+const clearDoodle = document.getElementById("clearDoodle");
+const closeDoodle = document.getElementById("closeDoodle");
 
-let timer = 120; // 2 min
+/* timer */
+let timer = 120;
+let interval = null;
 let running = false;
 let streak = 0;
-let interval = null;
 
-// canvas doodle setup
-const ctx = doodleCanvas.getContext('2d');
+function formatTime(sec) {
+  const m = String(Math.floor(sec / 60)).padStart(2, "0");
+  const s = String(sec % 60).padStart(2, "0");
+  return `${m}:${s}`;
+}
+
+timerEl.textContent = formatTime(timer);
+
+function animateTimer() {
+  timerEl.classList.remove("animate");
+  void timerEl.offsetWidth;
+  timerEl.classList.add("animate");
+}
+
+startBtn.addEventListener("click", () => {
+  if (running) return;
+  running = true;
+
+  interval = setInterval(() => {
+    timer--;
+    timerEl.textContent = formatTime(timer);
+    animateTimer();
+
+    if (timer <= 0) finishSession();
+  }, 1000);
+});
+
+function finishSession() {
+  running = false;
+  clearInterval(interval);
+  streak++;
+  streakEl.textContent = streak;
+  timerEl.textContent = "🎉 Done!";
+  petBounce();
+}
+
+resetBtn.addEventListener("click", () => {
+  clearInterval(interval);
+  running = false;
+  timer = 120;
+  timerEl.textContent = formatTime(timer);
+});
+
+addBtn.addEventListener("click", () => {
+  if (!running) {
+    timer += 30;
+    timerEl.textContent = formatTime(timer);
+    animateTimer();
+  }
+});
+
+subBtn.addEventListener("click", () => {
+  if (!running) {
+    timer = Math.max(10, timer - 30);
+    timerEl.textContent = formatTime(timer);
+    animateTimer();
+  }
+});
+
+/* PET */
+function petBounce() {
+  pet.animate(
+    [
+      { transform: "scale(1)" },
+      { transform: "scale(1.3) rotate(10deg)" },
+      { transform: "scale(1)" }
+    ],
+    { duration: 500, easing: "ease-out" }
+  );
+}
+
+pet.addEventListener("click", () => {
+  petBounce();
+  showRandomFact();
+});
+
+/* info popup */
+infoBtn.addEventListener("click", () => {
+  infoPopup.classList.toggle("show");
+});
+closePopup.addEventListener("click", () => {
+  infoPopup.classList.remove("show");
+});
+
+/* journal popup */
+document.getElementById("openJournalBtn").addEventListener("click", () => {
+  journalInput.value = "";
+  journalPopup.classList.add("show");
+});
+journalClose.addEventListener("click", () => journalPopup.classList.remove("show"));
+journalSave.addEventListener("click", () => {
+  let entry = journalInput.value.trim();
+  if (entry) console.log("Journal entry:", entry);
+  journalPopup.classList.remove("show");
+});
+
+/* doodle */
+let ctx = doodleCanvas.getContext("2d");
 let drawing = false;
 
-function resizeCanvas() { doodleCanvas.width = doodleCanvas.offsetWidth; doodleCanvas.height = 120; ctx.lineWidth = 2; ctx.strokeStyle = '#6b3b6a'; }
-window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() {
+  doodleCanvas.width = doodleCanvas.offsetWidth;
+  doodleCanvas.height = 150;
+}
 resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-doodleCanvas.addEventListener('mousedown', ()=>drawing=true);
-doodleCanvas.addEventListener('mouseup', ()=>drawing=false);
-doodleCanvas.addEventListener('mouseleave', ()=>drawing=false);
-doodleCanvas.addEventListener('mousemove', e=>{
+document.getElementById("openDoodleBtn").addEventListener("click", () => {
+  doodlePopup.classList.add("show");
+  resizeCanvas();
+});
+
+closeDoodle.addEventListener("click", () => doodlePopup.classList.remove("show"));
+clearDoodle.addEventListener("click", () => ctx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height));
+
+doodleCanvas.addEventListener("mousedown", (e) => {
+  drawing = true;
+  ctx.beginPath();
+});
+doodleCanvas.addEventListener("mouseup", () => (drawing = false));
+doodleCanvas.addEventListener("mousemove", (e) => {
   if (!drawing) return;
   const rect = doodleCanvas.getBoundingClientRect();
+  ctx.lineWidth = 3;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#6b3b6a";
   ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 });
-// touch support
-doodleCanvas.addEventListener('touchstart', e=>{drawing=true;e.preventDefault();});
-doodleCanvas.addEventListener('touchend', ()=>drawing=false);
-doodleCanvas.addEventListener('touchmove', e=>{
-  if (!drawing) return;
-  const rect = doodleCanvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-});
 
-// timer format
-function formatTime(seconds){ const m=String(Math.floor(seconds/60)).padStart(2,'0'); const s=String(seconds%60).padStart(2,'0'); return `${m}:${s}`; }
-function animateTimer(){ timerEl.classList.remove('animate'); void timerEl.offsetWidth; timerEl.classList.add('animate'); }
-
-// timer functions
-function startTimer(){
-  if(running) return;
-  running=true; timerEl.textContent=formatTime(timer);
-  interval=setInterval(()=>{
-    timer--; timerEl.textContent=formatTime(timer); animateTimer();
-    if(timer<=0) finishSession();
-  },1000);
-}
-
-function finishSession(){
-  clearInterval(interval); running=false; streak++; streakEl.textContent=streak; timerEl.textContent="🎉 Done!"; petBounce(); showJournal();
-}
-
-function resetTimer(){ clearInterval(interval); running=false; timer=120; timerEl.textContent=formatTime(timer); }
-
-function petBounce(){ pet.animate([{transform:'scale(1) rotate(0deg)'},{transform:'scale(1.3) rotate(15deg)'},{transform:'scale(1) rotate(0deg)'}],{duration:500,easing:'ease-out'});}
-pet.addEventListener('click', ()=>{ if(running) petBounce(); showRandomFact(); });
-
-// --- Timer adjust ---
-addBtn.addEventListener('click', ()=>{ if(!running){ timer+=30;if(timer>3600) timer=3600; timerEl.textContent=formatTime(timer); animateTimer(); }});
-subBtn.addEventListener('click', ()=>{ if(!running){ timer-=30;if(timer<10) timer=10; timerEl.textContent=formatTime(timer); animateTimer(); }});
-
-// --- Start / Reset ---
-startBtn.addEventListener('click', startTimer);
-resetBtn.addEventListener('click', resetTimer);
-
-// --- Info popup ---
-infoBtn.addEventListener('click', ()=>infoPopup.classList.add('show'));
-closePopup.addEventListener('click', ()=>infoPopup.classList.remove('show'));
-
-// --- Journal popup ---
-function showJournal(){ journalInput.value=''; ctx.clearRect(0,0,doodleCanvas.width,doodleCanvas.height); journalPopup.classList.add('show'); }
-function closeJournal(){ journalPopup.classList.remove('show'); }
-journalSave.addEventListener('click', ()=>{
-  const entry=journalInput.value.trim();
-  if(entry){ console.log("Journal entry:", entry); }
-  closeJournal();
-});
-journalClose.addEventListener('click', closeJournal);
-
-// random fact on pet click
-const facts=[
+/* RANDOM FACT */
+const facts = [
   "Seals can sleep underwater! 🦭",
   "Cats have whiskers to sense their surroundings! 🐱",
   "Bunnies can rotate their ears 180°! 🐰",
@@ -108,14 +168,34 @@ const facts=[
   "Micro-breaks boost focus by ~20%! 🌟",
   "Fish can recognize faces! 🐟"
 ];
-function showRandomFact(){
-  const fact=facts[Math.floor(Math.random()*facts.length)];
-  const temp=document.createElement('div');
-  temp.textContent=fact;
-  temp.style.position='fixed'; temp.style.bottom='150px'; temp.style.left='50%'; temp.style.transform='translateX(-50%)';
-  temp.style.background='var(--accent2)'; temp.style.color='#6b3b6a'; temp.style.padding='8px 12px'; temp.style.borderRadius='12px';
-  temp.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'; temp.style.opacity='0'; temp.style.transition='opacity 0.3s ease, transform 0.3s ease';
-  document.body.appendChild(temp);
-  requestAnimationFrame(()=>{ temp.style.opacity='1'; temp.style.transform='translateX(-50%) translateY(-10px)'; });
-  setTimeout(()=>{ temp.style.opacity='0'; temp.style.transform='translateX(-50%) translateY(-20px)'; setTimeout(()=>temp.remove(),300); },2500);
+
+function showRandomFact() {
+  const fact = facts[Math.floor(Math.random() * facts.length)];
+  const el = document.createElement("div");
+  el.textContent = fact;
+
+  el.style.position = "fixed";
+  el.style.bottom = "150px";
+  el.style.left = "50%";
+  el.style.transform = "translateX(-50%)";
+  el.style.background = "var(--accent2)";
+  el.style.color = "#6b3b6a";
+  el.style.padding = "8px 12px";
+  el.style.borderRadius = "12px";
+  el.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+  el.style.opacity = "0";
+  el.style.transition = "all 0.3s ease";
+
+  document.body.appendChild(el);
+
+  requestAnimationFrame(() => {
+    el.style.opacity = "1";
+    el.style.transform = "translateX(-50%) translateY(-10px)";
+  });
+
+  setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transform = "translateX(-50%) translateY(-20px)";
+    setTimeout(() => el.remove(), 300);
+  }, 2500);
 }
