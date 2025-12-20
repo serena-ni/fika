@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fika</title>
-
-  <!-- soft modern font -->
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="card">
     <h1>fika</h1>
 
-    <div class="pet-wrapper">
-      <div id="catMessage" class="cat-message">
-        <span class="cat-text"></span>
-        <button class="cat-close">×</button>
-      </div>
-      <div class="pet" id="pet">🐱</div>
-    </div>
+    <div class="pet" id="pet" title="click me!">🐱</div>
 
     <div class="timer-container">
-      <button class="button muted" id="subBtn">−30s</button>
+      <button class="button muted" id="subBtn">-30s</button>
       <div class="timer" id="timer">02:00</div>
       <button class="button muted" id="addBtn">+30s</button>
     </div>
@@ -34,6 +25,7 @@
     </div>
 
     <div class="score">streak: <span id="streak">0</span></div>
+    <div class="mini-hint">click the pet during your break for a tiny cheer! 🎉</div>
 
     <div class="dual-buttons">
       <button id="openJournalBtn" class="button muted">journal</button>
@@ -41,25 +33,37 @@
     </div>
   </div>
 
-  <!-- journal -->
-  <div id="journalPopup" class="popup">
-    <h2>mini journal</h2>
-    <textarea id="journalInput" placeholder="a small thought..."></textarea>
-    <div class="popup-buttons">
+  <!-- info button -->
+  <button id="infoBtn" class="info-btn">❔</button>
+
+  <div id="infoPopup" class="info-popup">
+    <p>hi kat! 🎀</p><br>
+    <p>fika is a tiny focus-break tool with a cozy pet, streaks, and mini reflections.</p><br>
+    <button id="closePopup" class="button muted">close</button>
+  </div>
+
+  <!-- journal popup -->
+  <div id="journalPopup" class="journal-popup">
+    <h2>mini journal ✨</h2>
+    <p>write a small thought</p>
+    <textarea id="journalInput" placeholder="your thoughts..."></textarea>
+    <div class="journal-buttons">
       <button id="journalClose" class="button muted">cancel</button>
       <button id="journalSave" class="button primary">save</button>
     </div>
   </div>
 
-  <!-- doodle -->
-  <div id="doodlePopup" class="popup">
-    <h2>doodle pad</h2>
+  <!-- doodle popup -->
+  <div id="doodlePopup" class="journal-popup">
+    <h2>doodle pad 🎨</h2>
     <canvas id="doodleCanvas"></canvas>
-    <div class="popup-buttons">
+    <div class="journal-buttons">
       <button id="clearDoodle" class="button muted">clear</button>
       <button id="closeDoodle" class="button primary">done</button>
     </div>
-  </div>
+  </div><br>
+
+  <footer class="footer">made with ❤️</footer>
 
   <script src="script.js"></script>
 </body>
