@@ -21,54 +21,48 @@ const doodleCanvas = document.getElementById("doodleCanvas");
 const clearDoodle = document.getElementById("clearDoodle");
 const closeDoodle = document.getElementById("closeDoodle");
 
-// timer
-let timer = 120;
+const openJournalBtn = document.getElementById("openJournalBtn");
+const openDoodleBtn = document.getElementById("openDoodleBtn");
+
+// timer vars
+let timer = 120; // 2 minutes default
 let interval = null;
 let running = false;
 let streak = 0;
 
+// format time
 function formatTime(sec) {
   const m = String(Math.floor(sec / 60)).padStart(2, "0");
   const s = String(sec % 60).padStart(2, "0");
   return `${m}:${s}`;
 }
-
 timerEl.textContent = formatTime(timer);
 
-// dynamic milestones
-function getMilestones() {
-  const milestones = [];
-  for (let i = 1; i <= timer; i++) {
-    if (i % 60 === 0 || i <= 5) milestones.push(i);
-  }
-  return milestones;
-}
-
+// animate timer (milestones)
 function animateTimer() {
   timerEl.classList.remove("animate");
   void timerEl.offsetWidth;
   timerEl.classList.add("animate");
 }
 
-// timer functions
-function startTimer() {
+// start timer
+startBtn.addEventListener("click", () => {
   if (running) return;
   running = true;
 
-  // immediate timer update
-  timerEl.textContent = formatTime(timer);
-  if (getMilestones().includes(timer)) animateTimer();
-
   interval = setInterval(() => {
     timer--;
+
     timerEl.textContent = formatTime(timer);
 
-    if (getMilestones().includes(timer)) animateTimer();
+    // milestone seconds: full minutes or last 5 seconds
+    if (timer % 60 === 0 || (timer <= 5 && timer > 0)) animateTimer();
 
     if (timer <= 0) finishSession();
-  }, 1000);
-}
+  }, 1000); // 1 second
+});
 
+// finish session
 function finishSession() {
   clearInterval(interval);
   running = false;
@@ -76,29 +70,30 @@ function finishSession() {
   streakEl.textContent = streak;
   timerEl.textContent = "🎉 Done!";
   petBounce();
+  showRandomFact();
 }
 
-function resetTimer() {
+// reset timer
+resetBtn.addEventListener("click", () => {
   clearInterval(interval);
   running = false;
   timer = 120;
   timerEl.textContent = formatTime(timer);
-}
+});
 
-// timer adjustment
+// adjust timer
 addBtn.addEventListener("click", () => {
   if (!running) {
     timer += 30;
     timerEl.textContent = formatTime(timer);
-    if (getMilestones().includes(timer)) animateTimer();
+    animateTimer();
   }
 });
-
 subBtn.addEventListener("click", () => {
   if (!running) {
     timer = Math.max(10, timer - 30);
     timerEl.textContent = formatTime(timer);
-    if (getMilestones().includes(timer)) animateTimer();
+    animateTimer();
   }
 });
 
@@ -113,62 +108,17 @@ function petBounce() {
     { duration: 500, easing: "ease-out" }
   );
 }
-
-// random facts
-const facts = [
-  "Seals can sleep underwater! 🦭",
-  "Cats have whiskers to sense their surroundings! 🐱",
-  "Bunnies can rotate their ears 180°! 🐰",
-  "Your brain forms new connections daily! 🧠",
-  "Micro-breaks boost focus by ~20%! 🌟",
-  "Fish can recognize faces! 🐟"
-];
-
-
-//notifications
-function showNotification(msg) {
-  const container = document.createElement("div");
-  container.className = "notification";
-
-  const text = document.createElement("span");
-  text.textContent = msg;
-  container.appendChild(text);
-
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "✕";
-  closeBtn.className = "notification-close";
-  closeBtn.addEventListener("click", () => container.remove());
-  container.appendChild(closeBtn);
-
-  document.body.appendChild(container);
-
-  // slide in from right
-  requestAnimationFrame(() => {
-    container.style.transform = "translateX(0)";
-    container.style.opacity = "1";
-  });
-
-  // remove after 3 seconds
-  setTimeout(() => {
-    container.style.opacity = "0";
-    container.style.transform = "translateX(20px)";
-    setTimeout(() => container.remove(), 300);
-  }, 3000);
-}
-
-// click pet
 pet.addEventListener("click", () => {
   petBounce();
-  const fact = facts[Math.floor(Math.random() * facts.length)];
-  showNotification(fact);
+  showRandomFact();
 });
 
-// info pop-up
+// info popup
 infoBtn.addEventListener("click", () => infoPopup.classList.toggle("show"));
 closePopup.addEventListener("click", () => infoPopup.classList.remove("show"));
 
-// journal pop-up
-document.getElementById("openJournalBtn").addEventListener("click", () => {
+// journal popup
+openJournalBtn.addEventListener("click", () => {
   journalInput.value = "";
   journalPopup.classList.add("show");
 });
@@ -179,22 +129,24 @@ journalSave.addEventListener("click", () => {
   journalPopup.classList.remove("show");
 });
 
-// doodle pop-up
+// doodle popup
 let ctx = doodleCanvas.getContext("2d");
 let drawing = false;
 
 function resizeCanvas() {
   doodleCanvas.width = doodleCanvas.offsetWidth;
   doodleCanvas.height = 150;
+  ctx.lineWidth = 2;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#6b3b6a";
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-document.getElementById("openDoodleBtn").addEventListener("click", () => {
+openDoodleBtn.addEventListener("click", () => {
   doodlePopup.classList.add("show");
   resizeCanvas();
 });
-
 closeDoodle.addEventListener("click", () => doodlePopup.classList.remove("show"));
 clearDoodle.addEventListener("click", () => ctx.clearRect(0, 0, doodleCanvas.width, doodleCanvas.height));
 
@@ -206,15 +158,48 @@ doodleCanvas.addEventListener("mouseup", () => (drawing = false));
 doodleCanvas.addEventListener("mousemove", (e) => {
   if (!drawing) return;
   const rect = doodleCanvas.getBoundingClientRect();
-  ctx.lineWidth = 3;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "#6b3b6a";
   ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 });
 
-// start/reset/add/sub
-startBtn.addEventListener("click", startTimer);
-resetBtn.addEventListener("click", resetTimer);
+// random facts
+const facts = [
+  "Seals can sleep underwater! 🦭",
+  "Cats have whiskers to sense their surroundings! 🐱",
+  "Bunnies can rotate their ears 180°! 🐰",
+  "Your brain forms new connections daily! 🧠",
+  "Micro-breaks boost focus by ~20%! 🌟",
+  "Fish can recognize faces! 🐟"
+];
+
+function showRandomFact() {
+  const fact = facts[Math.floor(Math.random() * facts.length)];
+  const el = document.createElement("div");
+  el.className = "notification";
+  el.innerHTML = `<span>${fact}</span><button class="closeNotif">✕</button>`;
+  document.body.appendChild(el);
+
+  // position: right side
+  el.style.right = "20px";
+  el.style.top = `${20 + Math.random() * 100}px`;
+
+  // slide in animation
+  requestAnimationFrame(() => {
+    el.style.opacity = "1";
+    el.style.transform = "translateX(0)";
+  });
+
+  // close button
+  el.querySelector(".closeNotif").addEventListener("click", () => {
+    el.remove();
+  });
+
+  // auto remove after 3s
+  setTimeout(() => {
+    el.style.opacity = "0";
+    el.style.transform = "translateX(100%)";
+    setTimeout(() => el.remove(), 300);
+  }, 3000);
+}
