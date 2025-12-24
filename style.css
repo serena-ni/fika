@@ -18,6 +18,32 @@ body {
   padding-bottom: 50px; /* space for footer */
 }
 
+/* pet */
+.pet {
+  font-size: 60px;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.pet:hover { 
+  transform: scale(1.1) rotate(-5deg); 
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); 
+}
+
+.pet img {
+  width: 270px;     
+  height: auto;    
+  display: block;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.pet img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
 /* card */
 .card {
   background: var(--card);
